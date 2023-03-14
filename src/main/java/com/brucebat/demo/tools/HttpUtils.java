@@ -10,6 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 使用jdk自带的httpClient来完成对于http接口的调用
@@ -42,6 +43,31 @@ public class HttpUtils {
     public static String get(String url, Map<String, String> headers) throws IOException, InterruptedException {
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder(URI.create(url)).GET();
         return sendWithHeaders(headers, requestBuilder);
+    }
+
+    /**
+     * 发起异步调用流程
+     *
+     * @param url     请求地址
+     * @param headers 请求头
+     * @return 请求响应
+     */
+    public static CompletableFuture<HttpResponse<String>> getAsync(String url, Map<String, String> headers) {
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder(URI.create(url)).GET();
+        return sendWithHeadersAsync(headers, requestBuilder);
+    }
+
+    /**
+     * 发起异步post请求
+     *
+     * @param url        请求地址
+     * @param headers    请求头
+     * @param bodyString 请求body
+     * @return 返回响应
+     */
+    public static CompletableFuture<HttpResponse<String>> postAsync(String url, Map<String, String> headers, String bodyString) {
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder(URI.create(url)).POST(HttpRequest.BodyPublishers.ofString(bodyString));
+        return sendWithHeadersAsync(headers, requestBuilder);
     }
 
     /**
@@ -81,5 +107,23 @@ public class HttpUtils {
             throw new HttpException("http_" + response.statusCode(), "http调用发生异常");
         }
         return response.body();
+    }
+
+    /**
+     * 异步发送带有请求头的请求
+     *
+     * @param headers        请求头
+     * @param requestBuilder 请求创建器
+     * @return 异步返回响应
+     */
+    private static CompletableFuture<HttpResponse<String>> sendWithHeadersAsync(Map<String, String> headers, HttpRequest.Builder requestBuilder) {
+        if (MapUtils.isNotEmpty(headers)) {
+            for (String key : headers.keySet()) {
+                requestBuilder.header(key, headers.get(key));
+            }
+        }
+        HttpRequest request = requestBuilder.build();
+        // 发送异步流程
+        return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
     }
 }

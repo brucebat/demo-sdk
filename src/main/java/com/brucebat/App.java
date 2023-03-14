@@ -2,6 +2,10 @@ package com.brucebat;
 
 import com.brucebat.demo.tools.HttpUtils;
 
+import java.net.http.HttpResponse;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
 /**
  * 测试使用的主类
  *
@@ -17,9 +21,19 @@ public class App {
         // 测试HttpClient的使用
         try {
             String response = HttpUtils.get("http://www.baidu.com", null);
-            System.out.println(response);
+            System.out.println("同步获取网页信息 : " + response);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // 异步调用处理
+        CompletableFuture<HttpResponse<String>> responseFuture = HttpUtils.getAsync("http://www.baidu.com", null);
+        try {
+            HttpResponse<String> response = responseFuture.get(5000, TimeUnit.SECONDS);
+            System.out.println("异步获取网页信息 : " + response.body());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
