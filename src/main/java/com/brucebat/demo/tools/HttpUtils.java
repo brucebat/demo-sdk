@@ -10,7 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.*;
 
 /**
  * 使用jdk自带的httpClient来完成对于http接口的调用
@@ -25,10 +25,15 @@ public class HttpUtils {
 
     private static final int SC_OK = 200;
 
+    private static final Executor httpExecutor;
+
     static {
+        // 手动设置http调用请求处理线程池，这里在设置线程池时可以再加上线程池创建线程池的名称规则
+        httpExecutor = new ThreadPoolExecutor(10, 20, 15, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(2000), new ThreadPoolExecutor.AbortPolicy());
         httpClient = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
-                .connectTimeout(Duration.ofSeconds(10)).build();
+                .connectTimeout(Duration.ofSeconds(10)).executor(httpExecutor).build();
     }
 
     /**
