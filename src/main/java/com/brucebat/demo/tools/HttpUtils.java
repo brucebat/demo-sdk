@@ -28,7 +28,7 @@ public class HttpUtils {
     private static final Executor httpExecutor;
 
     static {
-        // 手动设置http调用请求处理线程池，这里在设置线程池时可以再加上线程池创建线程池的名称规则
+        // 手动设置http调用请求处理线程池，这里在设置线程池时可以再加上线程池创建线程池的名称规则。（记得思考一下使用线程池的原因，关键词：http连接）
         httpExecutor = new ThreadPoolExecutor(10, 20, 15, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(2000), new ThreadPoolExecutor.AbortPolicy());
         httpClient = HttpClient.newBuilder()
