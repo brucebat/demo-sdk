@@ -26,7 +26,7 @@ public class App {
             e.printStackTrace();
         }
 
-        // 异步调用处理
+        // 异步调用处理，在使用CompleteFuture之后会发现启动之后main线程不会停止
         CompletableFuture<HttpResponse<String>> responseFuture = HttpUtils.getAsync("http://www.baidu.com", null);
         try {
             HttpResponse<String> response = responseFuture.get(5000, TimeUnit.SECONDS);
