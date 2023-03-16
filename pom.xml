@@ -17,7 +17,7 @@
         <commons-collections-version>4.4</commons-collections-version>
     </properties>
 
-
+    <!--  这里使用dependencyManagement当中给出的配置实际上是针对多模块maven项目中依赖的类库版本进行统一管理  -->
     <dependencyManagement>
         <dependencies>
             <!-- lombok -->
@@ -43,5 +43,29 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <!--  这里用于指明当前module当中实际需要使用的类库  -->
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+    </dependencies>
+
+    <!--  设置构建需要使用的插件  -->
+    <build>
+        <!--  plugins当中设置的插件实际上在maven当中本身就是存在，只是有些内容需要进行指明（比如目标jdk版本），如果没有额外需要指定的内容无需进行填写 -->
+
+    </build>
 
 </project>
