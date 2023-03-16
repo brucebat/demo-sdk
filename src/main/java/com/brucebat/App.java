@@ -30,7 +30,7 @@ public class App {
         CompletableFuture<HttpResponse<String>> responseFuture = HttpUtils.getAsync("http://www.baidu.com", null);
         try {
             HttpResponse<String> response = responseFuture.get(5000, TimeUnit.SECONDS);
-            System.out.println("异步获取网页信息 : " + response.body());
+            System.out.println("异步获取网页信息 : " + response.body() + ", 请求状态码 : " + response.statusCode());
         } catch (Exception e) {
             e.printStackTrace();
         }

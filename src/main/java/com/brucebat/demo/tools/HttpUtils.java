@@ -31,8 +31,9 @@ public class HttpUtils {
         // 手动设置http调用请求处理线程池，这里在设置线程池时可以再加上线程池创建线程池的名称规则。（记得思考一下使用线程池的原因，关键词：http连接）
         httpExecutor = new ThreadPoolExecutor(10, 20, 15, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(2000), new ThreadPoolExecutor.AbortPolicy());
+        // 注意在使用httpClient的过程中需要指明到底使用的是什么版本的http协议，这里需要阐明使用这两种不同的协议会发生什么问题
         httpClient = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)
+                .version(HttpClient.Version.HTTP_2)
                 .connectTimeout(Duration.ofSeconds(10)).executor(httpExecutor).build();
     }
 
