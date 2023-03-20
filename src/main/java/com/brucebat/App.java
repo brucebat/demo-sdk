@@ -26,9 +26,10 @@ public class App {
             e.printStackTrace();
         }
 
-        // 异步调用处理，在使用CompleteFuture之后会发现启动之后main线程不会停止
+        // 异步调用处理，在使用CompleteFuture之后会发现启动之后main线程不会停止（需要思考一下这里为什么会出现main线程无法停止的情况）
         CompletableFuture<HttpResponse<String>> responseFuture = HttpUtils.getAsync("http://www.baidu.com", null);
         try {
+            // 这里调用get方法之后就会发生守护线程一直在的情况
             HttpResponse<String> response = responseFuture.get(5000, TimeUnit.SECONDS);
             System.out.println("异步获取网页信息 : " + response.body() + ", 请求状态码 : " + response.statusCode());
         } catch (Exception e) {
